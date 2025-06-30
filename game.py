@@ -7,8 +7,19 @@ from fractions import Fraction
 class MathEggCatchingGame:
     def __init__(self):  # FIXED: was _init_ (missing double underscores)
         # Initialize camera
-        self.cap = cv2.VideoCapture(0)
+        self.cap = None
+        for i in range(4):  # Try camera indices 0, 1, 2, 3
+            temp_cap = cv2.VideoCapture(i)
+            if temp_cap.isOpened():
+                self.cap = temp_cap
+                print(f"Camera found at index {i}")
+                break
+            temp_cap.release()
         
+        if self.cap is None:
+            print("No camera found!")
+            exit()
+            
         # Load face detection classifier
         self.face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
         
